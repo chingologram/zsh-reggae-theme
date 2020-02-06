@@ -25,7 +25,7 @@ function cmtUp() {
 function cmtDwn() {
     [ -d .git ] && git log --oneline ^`git rev-parse --abbrev-ref --symbolic-full-name @{u}` HEAD | wc -l | sed -e 's/[[:space:]]//g'
 }
-PROMPT='${time} ${pwd} $(git_prompt_info) $(cmtUp) $(cmtDwn)'
+PROMPT='${time} ${pwd} $(git_prompt_info) %{$fg[green]%} ↑ $(cmtUp) ↓ $(cmtDwn) $ %{$reset_color%}'
 # i would prefer 1 icon that shows the "most drastic" deviation from HEAD,
 # but lets see how this works out
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[green]%}["
