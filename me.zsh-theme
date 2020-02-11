@@ -20,12 +20,26 @@ local host="@${host_repr[$HOST]:-$HOST}%{$reset_color%}"
 # Compacted $PWD
 local pwd="%{$fg[yellow]%}%c%{$reset_color%}"
 function cmtUp() {
-    [ -d .git ] && git log --oneline `git rev-parse --abbrev-ref --symbolic-full-name @{u}` ^HEAD | wc -l | sed -e 's/[[:space:]]//g'
+    [ ! -d .git ] && return
+    up="$( git log --oneline `git rev-parse --abbrev-ref --symbolic-full-name @{u}` ^HEAD | wc -l | sed -e 's/[[:space:]]//g')"
+    if [ $up -gt 0 ]; then
+        echo -n "%{$fg[red]%}" 
+        echo -n '↓ '
+        echo -n $up
+        echo -n "%{$reset_color%}"
+    fi
 }
 function cmtDwn() {
-    [ -d .git ] && git log --oneline ^`git rev-parse --abbrev-ref --symbolic-full-name @{u}` HEAD | wc -l | sed -e 's/[[:space:]]//g'
+    [ ! -d .git ] && return
+    local dwn="$( git log --oneline ^`git rev-parse --abbrev-ref --symbolic-full-name @{u}` HEAD | wc -l | sed -e 's/[[:space:]]//g')"
+    if [ $dwn -gt 0 ]; then
+        echo -n "%{$fg[red]%}" 
+        echo -n '↑ '
+        echo -n $dwn
+        echo -n "%{$reset_color%}"
+    fi
 }
-PROMPT='${time} ${pwd} $(git_prompt_info) %{$fg[green]%} ↑ $(cmtUp) ↓ $(cmtDwn) $ %{$reset_color%}'
+PROMPT='${time} ${pwd} $(git_prompt_info) $(cmtDwn) $(cmtUp) $ '
 # i would prefer 1 icon that shows the "most drastic" deviation from HEAD,
 # but lets see how this works out
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[green]%}["
