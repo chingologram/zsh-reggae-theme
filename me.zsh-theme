@@ -39,7 +39,16 @@ function cmtDwn() {
         echo -n "%{$reset_color%}"
     fi
 }
-PROMPT='${time} ${pwd} $(git_prompt_info) $(cmtDwn) $(cmtUp) $ '
+
+function gitModified() {
+    [ ! -d .git ] && return
+    if [ $( git status -s | wc -l ) -gt 0 ]; then
+        echo -n "%{$fg[green]%}" 
+        echo -n '*'
+        echo -n "%{$reset_color%}"
+    fi
+}
+PROMPT='${time} ${pwd} $(git_prompt_info)$(gitModified) $(cmtDwn) $(cmtUp) $ '
 # i would prefer 1 icon that shows the "most drastic" deviation from HEAD,
 # but lets see how this works out
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[green]%}["
