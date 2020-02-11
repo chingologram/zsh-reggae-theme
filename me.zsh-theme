@@ -24,9 +24,9 @@ function cmtUp() {
     up="$( git log --oneline `git rev-parse --abbrev-ref --symbolic-full-name @{u}` ^HEAD | wc -l | sed -e 's/[[:space:]]//g')"
     if [ $up -gt 0 ]; then
         echo -n "%{$fg[red]%}" 
-        echo -n '↓ '
+        echo -n '↓'
         echo -n $up
-        echo -n "%{$reset_color%}"
+        echo -n "%{$reset_color%} "
     fi
 }
 function cmtDwn() {
@@ -34,21 +34,20 @@ function cmtDwn() {
     local dwn="$( git log --oneline ^`git rev-parse --abbrev-ref --symbolic-full-name @{u}` HEAD | wc -l | sed -e 's/[[:space:]]//g')"
     if [ $dwn -gt 0 ]; then
         echo -n "%{$fg[red]%}" 
-        echo -n '↑ '
+        echo -n '↑'
         echo -n $dwn
-        echo -n "%{$reset_color%}"
+        echo -n "%{$reset_color%} "
     fi
 }
-
 function gitModified() {
     [ ! -d .git ] && return
     if [ $( git status -s | wc -l ) -gt 0 ]; then
         echo -n "%{$fg[green]%}" 
         echo -n '*'
-        echo -n "%{$reset_color%}"
+        echo -n "%{$reset_color%} "
     fi
 }
-PROMPT='${time} ${pwd} $(git_prompt_info)$(gitModified) $(cmtDwn) $(cmtUp) $ '
+PROMPT='${time} ${pwd} $(git_prompt_info)$(gitModified)$(cmtDwn)$(cmtUp)$ '
 # i would prefer 1 icon that shows the "most drastic" deviation from HEAD,
 # but lets see how this works out
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[green]%}["
